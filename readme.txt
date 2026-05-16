@@ -4,7 +4,7 @@ Tags: ai, agents, markdown, llms.txt, robots.txt
 Requires at least: 5.9
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 0.1.3
+Stable tag: 0.1.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,6 +13,8 @@ Agent readiness for WordPress: Markdown negotiation, llms.txt, API catalog, agen
 == Description ==
 
 Agent Readiness helps WordPress sites expose public, read-only discovery surfaces for AI agents without pretending to support capabilities that are not implemented.
+
+It is designed to improve measurable agent accessibility in tools such as [Is It Agent Ready](https://isitagentready.com/) and [Agent Crawl](https://agenticseo.sh/tools/agent-crawl), a Conversion tool for measuring how much of a site can be read by agents.
 
 Features:
 
@@ -46,6 +48,10 @@ No. Normal browser and crawler requests continue to receive HTML. Markdown is re
 No. Agent Readiness publishes only real read-only resources. It does not publish an MCP Server Card unless a real MCP server exists.
 
 == Changelog ==
+
+= 0.1.4 =
+* Keep third-party WordPress admin notices out of the custom dashboard hero.
+* Document measurement support for Is It Agent Ready and Agent Crawl by Conversion.
 
 = 0.1.3 =
 * Rename the public plugin name and distribution slug to Agent Readiness for WordPress.org directory compatibility.

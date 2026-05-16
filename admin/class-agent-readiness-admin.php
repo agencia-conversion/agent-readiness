@@ -72,6 +72,7 @@ class Agent_Readiness_Admin {
 		?>
 		<div class="wrap agent-readiness-wrap">
 			<?php self::render_styles(); ?>
+			<div class="agent-readiness-admin-notices" aria-live="polite"></div>
 
 			<div class="agent-readiness-hero">
 				<div>
@@ -247,6 +248,12 @@ class Agent_Readiness_Admin {
 							<?php self::checklist_item( __( 'WPGraphQL detected', 'agent-readiness' ), $graphql_available ); ?>
 							<?php self::checklist_item( __( 'Link headers enabled', 'agent-readiness' ), $enabled && ( ! empty( $settings['enable_llms'] ) || ! empty( $settings['enable_api_catalog'] ) || ! empty( $settings['enable_agent_skills'] ) ) ); ?>
 						</ul>
+						<h3><?php esc_html_e( 'Measurement Tools', 'agent-readiness' ); ?></h3>
+						<div class="agent-readiness-measurement-tools">
+							<a href="https://isitagentready.com/" target="_blank" rel="noopener noreferrer">isitagentready.com</a>
+							<a href="https://agenticseo.sh/tools/agent-crawl" target="_blank" rel="noopener noreferrer">Agent Crawl</a>
+						</div>
+						<p class="agent-readiness-measurement-note"><?php esc_html_e( 'Agent Readiness is designed to improve measurable agent accessibility in scanners such as Is It Agent Ready and Agent Crawl by Conversion.', 'agent-readiness' ); ?></p>
 						<h3><?php esc_html_e( 'curl Commands', 'agent-readiness' ); ?></h3>
 						<div class="agent-readiness-code-list">
 							<code>curl -I <?php echo esc_html( home_url( '/' ) ); ?></code>
@@ -270,6 +277,7 @@ class Agent_Readiness_Admin {
 				<a href="https://conversion.ag/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'by Conversion', 'agent-readiness' ); ?></a>
 			</div>
 		</div>
+		<?php self::render_notice_script(); ?>
 		<?php
 	}
 
@@ -282,7 +290,10 @@ class Agent_Readiness_Admin {
 		?>
 		<style>
 			.agent-readiness-wrap{max-width:1240px}
-			.agent-readiness-hero{background:#0f172a;color:#fff;border-radius:8px;padding:28px 32px;margin:22px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:24px}
+			.agent-readiness-admin-notices:empty{display:none}
+			.agent-readiness-admin-notices .notice,.agent-readiness-admin-notices .updated,.agent-readiness-admin-notices .error,.agent-readiness-admin-notices .update-nag{display:block;margin:0 0 12px}
+			.agent-readiness-hero{background:#0f172a;color:#fff;border-radius:8px;padding:28px 32px;margin:22px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap}
+			.agent-readiness-hero>.notice,.agent-readiness-hero>.updated,.agent-readiness-hero>.error,.agent-readiness-hero>.update-nag{flex:0 0 100%;order:-1;max-width:100%;margin:0;color:#1d2327;background:#fff}
 			.agent-readiness-brand{display:flex;align-items:center;gap:16px;margin:0 0 14px}
 			.agent-readiness-brand a{display:inline-flex;align-items:center}
 			.agent-readiness-brand img{display:block;width:166px;height:auto}
@@ -324,6 +335,9 @@ class Agent_Readiness_Admin {
 			.agent-readiness-check{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:999px;font-size:12px;font-weight:700}
 			.agent-readiness-check-yes{background:#ecfdf5;color:#047857}
 			.agent-readiness-check-no{background:#f3f4f6;color:#6b7280}
+			.agent-readiness-measurement-tools{display:grid;gap:8px;margin:0 0 10px}
+			.agent-readiness-measurement-tools a{display:block;background:#fff;border:1px solid #dcdcde;border-radius:6px;padding:9px;line-height:1.45;text-decoration:none;font-weight:700}
+			.agent-readiness-measurement-note{margin:0 0 18px;color:#4b5563}
 			.agent-readiness-code-list{display:grid;gap:8px}
 			.agent-readiness-code-list code{display:block;white-space:normal;background:#fff;border:1px solid #dcdcde;border-radius:6px;padding:9px;line-height:1.45}
 			.agent-readiness-footer{border-top:1px solid #dcdcde;margin:28px 0 0;padding:16px 0;color:#4b5563;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
@@ -332,6 +346,38 @@ class Agent_Readiness_Admin {
 			@media (max-width:1100px){.agent-readiness-grid,.agent-readiness-grid-2,.agent-readiness-grid-4,.agent-readiness-diagnostics{grid-template-columns:1fr 1fr}.agent-readiness-fields{grid-template-columns:1fr}}
 			@media (max-width:782px){.agent-readiness-hero,.agent-readiness-section-heading{display:block}.agent-readiness-hero-meta{justify-content:flex-start;margin-top:16px}.agent-readiness-brand{gap:12px;align-items:flex-start;flex-direction:column}.agent-readiness-brand-divider{display:none}.agent-readiness-brand img{width:150px}.agent-readiness-grid,.agent-readiness-grid-2,.agent-readiness-grid-4,.agent-readiness-diagnostics{grid-template-columns:1fr}.agent-readiness-post-types{grid-template-columns:1fr}}
 		</style>
+		<?php
+	}
+
+	/**
+	 * Keep third-party admin notices out of the custom hero layout.
+	 *
+	 * @return void
+	 */
+	private static function render_notice_script() {
+		?>
+		<script>
+			(function(){
+				function moveAgentReadinessNotices(){
+					var lane = document.querySelector('.agent-readiness-admin-notices');
+					var hero = document.querySelector('.agent-readiness-hero');
+					if (!lane || !hero) {
+						return;
+					}
+					hero.querySelectorAll('.notice, .updated, .error, .update-nag').forEach(function(notice){
+						lane.appendChild(notice);
+					});
+				}
+				moveAgentReadinessNotices();
+				document.addEventListener('DOMContentLoaded', moveAgentReadinessNotices);
+				if (window.MutationObserver) {
+					var hero = document.querySelector('.agent-readiness-hero');
+					if (hero) {
+						new MutationObserver(moveAgentReadinessNotices).observe(hero, { childList: true, subtree: true });
+					}
+				}
+			})();
+		</script>
 		<?php
 	}
 
