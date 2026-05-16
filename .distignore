@@ -4,6 +4,7 @@
 .github
 dist
 production-backups
+wordpress-org-assets
 tests
 tools
 docker-compose.yml

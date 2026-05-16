@@ -1,10 +1,10 @@
 === Agent Readiness ===
 Contributors: conversion
-Tags: ai, agents, markdown, llms.txt, robots.txt
+Tags: ai, agents, markdown, llms-txt, robots-txt
 Requires at least: 5.9
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 0.1.5
+Stable tag: 0.1.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,14 @@ Features:
 
 Agent Readiness does not publish fake OAuth, MCP, A2A, or commerce metadata.
 
+== Privacy ==
+
+Agent Readiness does not track users and does not send site data to external services automatically. The measurement links in the admin screen and readme are plain outbound links; no scanner is called unless an administrator opens those tools manually.
+
+== Development ==
+
+Development happens at https://github.com/agencia-conversion/agent-readiness. The distributed plugin contains readable PHP, JavaScript, CSS, and SVG source files; no build step is required to run the plugin.
+
 == Installation ==
 
 1. Upload the plugin ZIP in Plugins > Add New > Upload Plugin.
@@ -48,6 +56,9 @@ No. Normal browser and crawler requests continue to receive HTML. Markdown is re
 No. Agent Readiness publishes only real read-only resources. It does not publish an MCP Server Card unless a real MCP server exists.
 
 == Changelog ==
+
+= 0.1.6 =
+* Prepare WordPress.org submission metadata, privacy notes, development source link, and package exclusions.
 
 = 0.1.5 =
 * Schedule rewrite flushes after plugin upgrades so third-party sitemap rules remain registered.
