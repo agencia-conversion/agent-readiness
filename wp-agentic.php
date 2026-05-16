@@ -3,7 +3,7 @@
  * Plugin Name: WP Agentic
  * Plugin URI: https://www.conversion.com.br/
  * Description: Agent readiness for WordPress: Markdown negotiation, llms.txt, API catalog, agent skills, and AI content signals.
- * Version: 0.1.1
+ * Version: 0.1.2
  * Requires at least: 5.9
  * Requires PHP: 7.4
  * Author: Conversion
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WP_AGENTIC_VERSION', '0.1.1' );
+define( 'WP_AGENTIC_VERSION', '0.1.2' );
 define( 'WP_AGENTIC_FILE', __FILE__ );
 define( 'WP_AGENTIC_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WP_AGENTIC_URL', plugin_dir_url( __FILE__ ) );

@@ -1,6 +1,6 @@
 <?php
 define( 'WP_AGENTIC_TESTING', true );
-define( 'WP_AGENTIC_VERSION', '0.1.1' );
+define( 'WP_AGENTIC_VERSION', '0.1.2' );
 
 function wp_strip_all_tags( $text ) {
 	return strip_tags( $text );
@@ -42,9 +42,75 @@ function has_action( $hook ) {
 	return false;
 }
 
+function current_user_can( $capability ) {
+	return true;
+}
+
+function __( $text, $domain = 'default' ) {
+	unset( $domain );
+	return $text;
+}
+
+function esc_html_e( $text, $domain = 'default' ) {
+	echo esc_html( __( $text, $domain ) );
+}
+
+function esc_attr( $text ) {
+	return htmlspecialchars( (string) $text, ENT_QUOTES, 'UTF-8' );
+}
+
+function esc_url( $url ) {
+	return filter_var( $url, FILTER_SANITIZE_URL );
+}
+
+function checked( $checked ) {
+	if ( $checked ) {
+		echo 'checked="checked"';
+	}
+}
+
+function selected( $selected, $current ) {
+	if ( (string) $selected === (string) $current ) {
+		echo 'selected="selected"';
+	}
+}
+
+function settings_fields( $option_group ) {
+	echo '<input type="hidden" name="option_page" value="' . esc_attr( $option_group ) . '">';
+}
+
+function submit_button( $text = 'Save Changes', $type = 'primary', $name = 'submit' ) {
+	unset( $type );
+	echo '<button name="' . esc_attr( $name ) . '">' . esc_html( $text ) . '</button>';
+}
+
+function rest_url( $path = '' ) {
+	return 'https://example.com/wp-json/' . ltrim( $path, '/' );
+}
+
+function get_post_types( $args = array(), $output = 'names' ) {
+	unset( $args );
+	if ( 'objects' === $output ) {
+		$post        = new stdClass();
+		$post->name  = 'post';
+		$post->labels = (object) array( 'singular_name' => 'Post' );
+		$page        = new stdClass();
+		$page->name  = 'page';
+		$page->labels = (object) array( 'singular_name' => 'Page' );
+
+		return array(
+			'post' => $post,
+			'page' => $page,
+		);
+	}
+
+	return array( 'post', 'page' );
+}
+
 require_once __DIR__ . '/../includes/class-wp-agentic-settings.php';
 require_once __DIR__ . '/../includes/class-wp-agentic-markdown.php';
 require_once __DIR__ . '/../includes/class-wp-agentic-routes.php';
+require_once __DIR__ . '/../admin/class-wp-agentic-admin.php';
 
 $failures = 0;
 
@@ -102,6 +168,23 @@ assert_true( false !== strpos( $skill_md, 'wp-json/wp-agentic/v1/search' ), 'SKI
 $llms = WP_Agentic_Routes::llms_text( $settings );
 assert_true( false !== strpos( $llms, '## Agent resources' ), 'llms.txt includes agent resources' );
 assert_true( false !== strpos( $llms, 'Content-Signal: ai-train=yes, search=yes, ai-input=yes' ), 'llms.txt includes Content-Signal' );
+
+ob_start();
+WP_Agentic_Admin::render_page();
+$admin_absent = ob_get_clean();
+assert_true( false !== strpos( $admin_absent, 'WP Agentic v0.1.2' ), 'admin footer exposes version' );
+assert_true( false !== strpos( $admin_absent, 'MCP Server Card' ), 'admin explains MCP Server Card boundary' );
+assert_true( false !== strpos( $admin_absent, 'Not detected' ), 'admin shows WPGraphQL absent state' );
+assert_true( false !== strpos( $admin_absent, 'https://wordpress.org/plugins/wp-graphql/' ), 'admin links to WPGraphQL plugin when absent' );
+assert_true( false !== strpos( $admin_absent, 'wp_agentic_settings[enable_webmcp]' ), 'admin preserves WebMCP toggle name' );
+
+eval( 'class WPGraphQL {}' );
+
+ob_start();
+WP_Agentic_Admin::render_page();
+$admin_present = ob_get_clean();
+assert_true( false !== strpos( $admin_present, 'https://example.com/graphql' ), 'admin shows WPGraphQL endpoint when active' );
+assert_true( false !== strpos( $admin_present, 'Advertise when active' ), 'admin preserves WPGraphQL advertise toggle' );
 
 if ( $failures > 0 ) {
 	echo "{$failures} failure(s)\n";

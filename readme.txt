@@ -4,7 +4,7 @@ Tags: ai, agents, markdown, llms.txt, robots.txt
 Requires at least: 5.9
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.1.1
+Stable tag: 0.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,6 +46,11 @@ No. Normal browser and crawler requests continue to receive HTML. Markdown is re
 No. WP Agentic publishes only real read-only resources. It does not publish an MCP Server Card unless a real MCP server exists.
 
 == Changelog ==
+
+= 0.1.2 =
+* Redesign the admin settings page as a richer dashboard with module explanations, scanner impact, diagnostics, and version footer.
+* Add WPGraphQL status detection and installation guidance when WPGraphQL is not detected.
+* Document why WebMCP is different from an MCP Server Card and keep fake OAuth, MCP Server Card, A2A, and commerce metadata unpublished.
 
 = 0.1.1 =
 * Add read-only WebMCP tools.
